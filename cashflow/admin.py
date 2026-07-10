@@ -1,11 +1,57 @@
 from django.contrib import admin
-from .models import Status, Transaction, TransactionType, Category, Subcategory
+from .models import Category, Status, Subcategory, Transaction, TransactionType
 
 
+@admin.register(Status)
+class StatusAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]
 
 
-admin.site.register(Status)
-admin.site.register(TransactionType)
-admin.site.register(Category)
-admin.site.register(Subcategory)
-admin.site.register(Transaction)
+@admin.register(TransactionType)
+class TransactionTypeAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "type"]
+    list_filter = ["type"]
+    search_fields = ["name"]
+
+
+@admin.register(Subcategory)
+class SubcategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "category"]
+    list_filter = ["category"]
+    search_fields = ["name"]
+
+
+@admin.register(Transaction)
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = [
+        "date",
+        "status",
+        "transaction_type",
+        "category",
+        "subcategory",
+        "amount",
+        "comment",
+    ]
+
+    list_filter = [
+        "date",
+        "status",
+        "transaction_type",
+        "category",
+        "subcategory",
+    ]
+
+    search_fields = [
+        "comment",
+        "category__name",
+        "subcategory__name",
+    ]
+
+    ordering = ["-date"]
