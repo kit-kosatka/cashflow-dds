@@ -15,6 +15,7 @@ class Status(models.Model):
         verbose_name_plural = "Статусы"
         ordering = ["name"]
 
+
 class TransactionType(models.Model):
     name = models.CharField(max_length=100)
 
@@ -25,6 +26,7 @@ class TransactionType(models.Model):
         verbose_name = "Тип операции"
         verbose_name_plural = "Типы операций"
         ordering = ["name"]
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -41,6 +43,7 @@ class Category(models.Model):
         verbose_name_plural = "Категории"
         ordering = ["name"]
 
+
 class Subcategory(models.Model):
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -53,13 +56,11 @@ class Subcategory(models.Model):
         verbose_name_plural = "Подкатегории"
         ordering = ["name"]
 
+
 class Transaction(models.Model):
     date = models.DateField(default=timezone.localdate)
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    transaction_type = models.ForeignKey(
-        TransactionType,
-        on_delete=models.PROTECT
-    )
+    transaction_type = models.ForeignKey(TransactionType, on_delete=models.PROTECT)
     category = ChainedForeignKey(
         Category,
         on_delete=models.PROTECT,
@@ -78,10 +79,7 @@ class Transaction(models.Model):
         auto_choose=True,
         sort=True,
     )
-    amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     comment = models.TextField(blank=True)
 
     def __str__(self):
@@ -101,7 +99,8 @@ class Transaction(models.Model):
             and self.category.transaction_type_id != self.transaction_type_id
         ):
             errors["category"] = (
-                f'Категория "{self.category}" не относится к типу "{self.transaction_type}".'
+                f'Категория "{self.category}" '
+                f'не относится к типу "{self.transaction_type}".'
             )
 
         if (
@@ -110,7 +109,8 @@ class Transaction(models.Model):
             and self.subcategory.category_id != self.category_id
         ):
             errors["subcategory"] = (
-                f'Подкатегория "{self.subcategory}" не относится к категории "{self.category}".'
+                f'Подкатегория "{self.subcategory}" '
+                f'не относится к категории "{self.category}".'
             )
 
         if errors:

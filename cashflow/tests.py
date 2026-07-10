@@ -1,26 +1,18 @@
-from django.db import transaction
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from .models import (Status, TransactionType, Category, Subcategory, Transaction)
+from .models import Status, TransactionType, Category, Subcategory, Transaction
+
 
 class TransactionModelTest(TestCase):
     def setUp(self):
-        self.status = Status.objects.create(
-            name="Бизнес"
-        )
-        self.expense_type = TransactionType.objects.create(
-            name="Списание"
-        )
-        self.income_type = TransactionType.objects.create(
-            name="Пополнение"
-        )
+        self.status = Status.objects.create(name="Бизнес")
+        self.expense_type = TransactionType.objects.create(name="Списание")
+        self.income_type = TransactionType.objects.create(name="Пополнение")
         self.category = Category.objects.create(
-            name="Маркетинг",
-            transaction_type=self.expense_type
+            name="Маркетинг", transaction_type=self.expense_type
         )
         self.subcategory = Subcategory.objects.create(
-            name="Avito",
-            category=self.category
+            name="Avito", category=self.category
         )
 
     def test_create_valid_transaction(self):
