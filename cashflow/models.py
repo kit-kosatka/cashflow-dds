@@ -10,18 +10,36 @@ class Status(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Статус"
+        verbose_name_plural = "Статусы"
+        ordering = ["name"]
+
 class TransactionType(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Тип операции"
+        verbose_name_plural = "Типы операций"
+        ordering = ["name"]
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    type = models.ForeignKey(TransactionType, on_delete=models.PROTECT)
+    transaction_type = models.ForeignKey(
+        TransactionType,
+        on_delete=models.PROTECT,
+    )
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+        ordering = ["name"]
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=100)
@@ -29,6 +47,11 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Подкатегория"
+        verbose_name_plural = "Подкатегории"
+        ordering = ["name"]
 
 class Transaction(models.Model):
     date = models.DateField(default=timezone.localdate)
@@ -64,13 +87,18 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.date} - {self.amount}"
 
+    class Meta:
+        verbose_name = "Операция"
+        verbose_name_plural = "Операции"
+        ordering = ["-date"]
+
     def clean(self):
         errors = {}
 
         if (
             self.category_id
             and self.transaction_type_id
-            and self.category.type_id != self.transaction_type_id
+            and self.category.transaction_type_id != self.transaction_type_id
         ):
             errors["category"] = (
                 f'Категория "{self.category}" не относится к типу "{self.transaction_type}".'

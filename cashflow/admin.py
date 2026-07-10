@@ -16,8 +16,8 @@ class TransactionTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "type"]
-    list_filter = ["type"]
+    list_display = ["name", "transaction_type"]
+    list_filter = ["transaction_type"]
     search_fields = ["name"]
 
 
