@@ -65,7 +65,7 @@ class Transaction(models.Model):
         Category,
         on_delete=models.PROTECT,
         chained_field="transaction_type",
-        chained_model_field="type",
+        chained_model_field="transaction_type",
         show_all=False,
         auto_choose=True,
         sort=True,
